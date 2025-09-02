@@ -126,6 +126,7 @@ venv.bak/
 
 # seed project
 result.zip
+data.zip
 test_temp
 Results_pred_symlg
 *.tfevents.*

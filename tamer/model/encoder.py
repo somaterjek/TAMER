@@ -1,7 +1,7 @@
 import math
 from typing import Tuple
 
-import pytorch_lightning as pl
+import lightning as L
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -144,7 +144,7 @@ class DenseNet(nn.Module):
         return out, out_mask
 
 
-class Encoder(pl.LightningModule):
+class Encoder(L.LightningModule):
     def __init__(self, d_model: int, growth_rate: int, num_layers: int):
         super().__init__()
 

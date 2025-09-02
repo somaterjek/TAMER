@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import List, Tuple
 
-import pytorch_lightning as pl
+import lightning as L
 import torch
 import torch.nn.functional as F
 from tamer.datamodule import vocab
@@ -16,7 +16,7 @@ from .beam_search import BeamSearchScorer
 # https://github.com/huggingface/transformers/blob/af6e01c5bc39467f1e3ce47a2135fb1777af1db2/src/transformers/generation_utils.py#L1843
 
 
-class DecodeModel(pl.LightningModule):
+class DecodeModel(L.LightningModule):
     @abstractmethod
     def transform(
         self, src: List[FloatTensor], src_mask: List[LongTensor], input_ids: LongTensor

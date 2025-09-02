@@ -1,6 +1,6 @@
 from typing import List
 
-import pytorch_lightning as pl
+import lightning as L
 import torch
 from torch import FloatTensor, LongTensor
 
@@ -10,7 +10,7 @@ from .decoder import Decoder
 from .encoder import Encoder
 
 
-class TAMER(pl.LightningModule):
+class TAMER(L.LightningModule):
     def __init__(
         self,
         d_model: int,

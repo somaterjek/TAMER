@@ -1,12 +1,26 @@
-from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
-from pytorch_lightning.utilities.cli import LightningCLI
-
+from lightning.pytorch.strategies import DDPStrategy
+from lightning.pytorch.cli import LightningCLI
 from tamer.datamodule import HMEDatamodule
 from tamer.lit_tamer import LitTAMER
 
-cli = LightningCLI(
+# For local trial
+# LightningCLI(
+#     LitTAMER,
+#     HMEDatamodule,
+#     save_config_kwargs={"overwrite": True},
+#     trainer_defaults={"accelerator": "cpu"}
+
+# )
+
+# For distributed training with GPUs and stuff
+LightningCLI(
     LitTAMER,
     HMEDatamodule,
-    save_config_overwrite=True,
-    trainer_defaults={"plugins": DDPPlugin(find_unused_parameters=False)},
+    trainer_defaults={
+        #"auto_scale_batch_size": "binsearch",
+        "strategy": {
+            "class_path": "lightning.pytorch.strategies.DDPStrategy",
+            "init_args": {"find_unused_parameters": False}
+        }
+    }
 )

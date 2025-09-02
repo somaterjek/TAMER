@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 import numpy as np
-import pytorch_lightning as pl
+import lightning as L
 import torch
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
@@ -150,7 +150,7 @@ def build_dataset(archive, folder: str, batch_size: int, max_size: int, is_train
     return data_iterator(data, batch_size, max_size, is_train)
 
 
-class HMEDatamodule(pl.LightningDataModule):
+class HMEDatamodule(L.LightningDataModule):
     def __init__(
         self,
         folder: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data/crohme",
@@ -176,6 +176,8 @@ class HMEDatamodule(pl.LightningDataModule):
         vocab.init(os.path.join(folder, "dictionary.txt"))
 
         print(f"Load data from: {self.folder}")
+        # Debugging for docker problems
+        print("Vocab size:", len(vocab))
 
     def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:

@@ -2,7 +2,7 @@ import zipfile
 from typing import List
 import editdistance
 import json
-import pytorch_lightning as pl
+import lightning as L
 import torch
 import torch.optim as optim
 from torch import FloatTensor, LongTensor
@@ -13,7 +13,27 @@ from tamer.utils.utils import (
     ExpRateRecorder, Hypothesis, ce_loss, to_bi_tgt_out, to_struct_output)
 
 
-class LitTAMER(pl.LightningModule):
+class LitTAMER(L.LightningModule):
+    def on_train_epoch_end(self):
+        # Print average training loss and struct loss for the epoch
+        train_loss = self.trainer.callback_metrics.get("train_loss")
+        struct_loss = self.trainer.callback_metrics.get("train/struct_loss")
+        if train_loss is not None:
+            print(f"Epoch {self.current_epoch} TRAIN: loss = {train_loss:.4f}")
+        if struct_loss is not None:
+            print(f"Epoch {self.current_epoch} TRAIN: struct_loss = {struct_loss:.4f}")
+
+    def on_validation_epoch_end(self):
+        # Print average validation loss and struct loss for the epoch
+        val_loss = self.trainer.callback_metrics.get("val_loss")
+        struct_loss = self.trainer.callback_metrics.get("val/struct_loss")
+        exprate = self.trainer.callback_metrics.get("val_ExpRate")
+        if val_loss is not None:
+            print(f"Epoch {self.current_epoch} VAL: loss = {val_loss:.4f}")
+        if struct_loss is not None:
+            print(f"Epoch {self.current_epoch} VAL: struct_loss = {struct_loss:.4f}")
+        if exprate is not None:
+            print(f"Epoch {self.current_epoch} VAL: ExpRate = {exprate:.4f}")
     def __init__(
         self,
         d_model: int,
@@ -58,6 +78,9 @@ class LitTAMER(pl.LightningModule):
         )
 
         self.exprate_recorder = ExpRateRecorder()
+
+        print("LitTAMER __init__: vocab_size =", vocab_size)
+        print("LitTAMER __init__: self.hparams.vocab_size =", self.hparams.vocab_size)
 
     def forward(
         self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
