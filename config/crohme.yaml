@@ -1,9 +1,12 @@
+seed_everything: 7
+
 trainer:
   max_epochs: 400
   accelerator: gpu
   devices: 4
-  log_every_n_steps: 1
-  seed_everything: 7
+  log_every_n_steps: 10
+  check_val_every_n_epoch: 5
+  precision: "bf16-mixed"
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
@@ -46,7 +49,7 @@ data:
   test_folder: "2014"
   max_size: 320000
   scale_to_limit: true
-  train_batch_size: 8
-  eval_batch_size: 2
+  train_batch_size: 32
+  eval_batch_size: 8
   num_workers: 8
   scale_aug: false
