@@ -160,6 +160,8 @@ class HMEDatamodule(L.LightningDataModule):
         train_batch_size: int = 8,
         eval_batch_size: int = 4,
         num_workers: int = 5,
+        persistent_workers: bool=False,
+        pin_memory=True,
         scale_aug: bool = False,
     ) -> None:
         super().__init__()
@@ -171,6 +173,8 @@ class HMEDatamodule(L.LightningDataModule):
         self.train_batch_size = train_batch_size
         self.eval_batch_size = eval_batch_size
         self.num_workers = num_workers
+        self.persistent_workers = persistent_workers
+        self.pin_memory = pin_memory
         self.scale_aug = scale_aug
 
         vocab.init(os.path.join(folder, "dictionary.txt"))
